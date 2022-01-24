@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Csv","A buffered CSV serializing body stream."],["DisplayStream","A buffered line formatting body stream."],["NdJson","A buffered NDJSON serializing body stream."]]});

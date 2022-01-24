@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["channel","Returns a sender half and a receiver half that can be used as a body type."]],"struct":[["Sender","A channel-like sender for body chunks."]]});

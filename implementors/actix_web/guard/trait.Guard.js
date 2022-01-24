@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["actix_web_lab"] = [{"text":"impl Guard for <a class=\"struct\" href=\"actix_web_lab/guard/struct.Acceptable.html\" title=\"struct actix_web_lab::guard::Acceptable\">Acceptable</a>","synthetic":false,"types":["actix_web_lab::acceptable::Acceptable"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

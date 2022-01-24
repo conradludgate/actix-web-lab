@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["DEFAULT_JSON_LIMIT",""]],"struct":[["Json","JSON extractor with const-generic payload size limit."],["LazyData","A lazy extractor for thread-local data."],["Query","Extract typed information from the request’s query."]]});

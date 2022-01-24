@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["actix_web_lab"] = [{"text":"impl&lt;B&gt; Service&lt;ServiceRequest&gt; for <a class=\"struct\" href=\"actix_web_lab/middleware/struct.Next.html\" title=\"struct actix_web_lab::middleware::Next\">Next</a>&lt;B&gt;","synthetic":false,"types":["actix_web_lab::middleware_from_fn::Next"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
