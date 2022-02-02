@@ -3,7 +3,7 @@
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../actix_web_lab/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../actix_web_lab/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../actix_web_lab/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -105,6 +105,7 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actix_web</span>::{
     <span class="ident">body::MessageBody</span>,
     <span class="ident">dev</span>::{<span class="ident">ServiceRequest</span>, <span class="ident">ServiceResponse</span>},
@@ -169,9 +170,10 @@
             <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>,
         <span class="op">&gt;</span>,
     <span class="op">&gt;</span> {
-        <span class="ident">App::new</span>()
-            .<span class="ident">wrap</span>(<span class="ident">from_fn</span>(<span class="ident">redirect_to_www</span>))
-            .<span class="ident">route</span>(<span class="string">&quot;/&quot;</span>, <span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HttpResponse::Ok</span>().<span class="ident">body</span>(<span class="string">&quot;content&quot;</span>)))
+        <span class="ident">App::new</span>().<span class="ident">wrap</span>(<span class="ident">from_fn</span>(<span class="ident">redirect_to_www</span>)).<span class="ident">route</span>(
+            <span class="string">&quot;/&quot;</span>,
+            <span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">async</span> { <span class="ident">HttpResponse::Ok</span>().<span class="ident">body</span>(<span class="string">&quot;content&quot;</span>) }),
+        )
     }
 
     <span class="attribute">#[<span class="ident">actix_web::test</span>]</span>
@@ -208,5 +210,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_web_lab" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (84322efad 2022-01-23)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_web_lab" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
 </body></html>

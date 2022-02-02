@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["actix_web_lab"] = [{"text":"impl Responder for <a class=\"struct\" href=\"actix_web_lab/web/struct.Redirect.html\" title=\"struct actix_web_lab::web::Redirect\">Redirect</a>","synthetic":false,"types":["actix_web_lab::redirect::Redirect"]}];
+implementors["actix_web_lab"] = [{"text":"impl Responder for <a class=\"struct\" href=\"actix_web_lab/respond/struct.Html.html\" title=\"struct actix_web_lab::respond::Html\">Html</a>","synthetic":false,"types":["actix_web_lab::html::Html"]},{"text":"impl Responder for <a class=\"struct\" href=\"actix_web_lab/web/struct.Redirect.html\" title=\"struct actix_web_lab::web::Redirect\">Redirect</a>","synthetic":false,"types":["actix_web_lab::redirect::Redirect"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
