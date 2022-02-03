@@ -228,6 +228,8 @@
 <span id="223">223</span>
 <span id="224">224</span>
 <span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt</span>;
 
 <span class="kw">use</span> <span class="ident">actix_web</span>::{<span class="ident">dev</span>, <span class="ident">FromRequest</span>, <span class="ident">HttpRequest</span>};
@@ -239,11 +241,13 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::body_extractor_fold::body_extractor_fold</span>;
 
-<span class="doccomment">/// Wraps an extractor and calculates a body checksum hash alongside.</span>
+<span class="doccomment">/// Wraps an extractor and calculates a body HMAC alongside.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If your extractor would usually be `T` and you want to create a hash of type `D` then you need</span>
 <span class="doccomment">/// to use `Hmac&lt;T, D&gt;`. It is assumed that the `T` extractor will consume the payload.</span>
 <span class="doccomment">/// Any hasher that implements [`Digest`] can be used.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Provide secret key with [`HmacConfig`] in `app_data`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Errors</span>
 <span class="doccomment">/// This extractor produces no errors of its own and all errors from the underlying extractor are</span>
