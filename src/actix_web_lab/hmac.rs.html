@@ -211,18 +211,33 @@
 <span id="206">206</span>
 <span id="207">207</span>
 <span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
 <span class="kw">use</span> <span class="ident">actix_web</span>::{<span class="ident">dev</span>, <span class="ident">FromRequest</span>, <span class="ident">HttpRequest</span>};
-<span class="kw">use</span> <span class="ident">digest::CtOutput</span>;
+<span class="kw">use</span> <span class="ident">digest::core_api::BlockSizeUser</span>;
+<span class="kw">use</span> <span class="ident">digest</span>::{<span class="ident">generic_array::GenericArray</span>, <span class="ident">FixedOutput</span> <span class="kw">as</span> <span class="kw">_</span>};
 <span class="kw">use</span> <span class="ident">futures_core::future::LocalBoxFuture</span>;
 <span class="kw">use</span> <span class="ident">hmac::digest::Digest</span>;
-<span class="kw">use</span> <span class="ident">hmac::Mac</span> <span class="kw">as</span> <span class="kw">_</span>;
+<span class="kw">use</span> <span class="ident">hmac</span>::{<span class="ident">Mac</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">SimpleHmac</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::body_extractor_fold::body_extractor_fold</span>;
-
-<span class="kw">type</span> <span class="ident">HmacSha256</span> <span class="op">=</span> <span class="ident">hmac::Hmac</span><span class="op">&lt;</span><span class="ident">sha2::Sha256</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// Wraps an extractor and calculates a body checksum hash alongside.</span>
 <span class="doccomment">///</span>
@@ -242,7 +257,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// # type T = u64;</span>
 <span class="doccomment">/// async fn hmac_payload(form: Hmac&lt;web::Json&lt;T&gt;, Sha256&gt;) -&gt; impl Responder {</span>
-<span class="doccomment">///     web::Bytes::from(form.hash())</span>
+<span class="doccomment">///     web::Bytes::copy_from_slice(form.hash())</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let key = vec![0x01, 0x12, 0x34, 0x56];</span>
@@ -252,10 +267,12 @@
 <span class="doccomment">/// # ;</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>()]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span>: <span class="ident">Digest</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">D</span>: <span class="ident">Digest</span> <span class="op">+</span> <span class="ident">BlockSizeUser</span>,
+{
     <span class="ident">body</span>: <span class="ident">T</span>,
-    <span class="ident">hash</span>: <span class="ident">CtOutput</span><span class="op">&lt;</span><span class="ident">HmacSha256</span><span class="op">&gt;</span>,
-    <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span>(<span class="ident">D</span>,)<span class="op">&gt;</span>,
+    <span class="ident">hash</span>: <span class="ident">GenericArray</span><span class="op">&lt;</span><span class="ident">u8</span>, <span class="ident">D::OutputSize</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HmacConfig</span> {
@@ -278,11 +295,13 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span>: <span class="ident">Digest</span><span class="op">&gt;</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span>: <span class="ident">Digest</span><span class="op">&gt;</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">D</span>: <span class="ident">Digest</span> <span class="op">+</span> <span class="ident">BlockSizeUser</span>,
+{
     <span class="doccomment">/// Returns hash slice.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hash</span>.<span class="ident">clone</span>().<span class="ident">into_bytes</span>();
-        <span class="ident">out</span>.<span class="ident">as_slice</span>().<span class="ident">to_vec</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="self">self</span>.<span class="ident">hash</span>.<span class="ident">as_slice</span>()
     }
 
     <span class="doccomment">/// Returns hash output size.</span>
@@ -292,15 +311,15 @@
 
     <span class="doccomment">/// Returns tuple containing body type and owned hash.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">T</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hash</span>();
+        <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hash</span>().<span class="ident">to_vec</span>();
         (<span class="self">self</span>.<span class="ident">body</span>, <span class="ident">hash</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span> <span class="ident">FromRequest</span> <span class="kw">for</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">Digest</span>,
     <span class="ident">T</span>: <span class="ident">FromRequest</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">D</span>: <span class="ident">Digest</span> <span class="op">+</span> <span class="ident">BlockSizeUser</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">T::Error</span>;
     <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">LocalBoxFuture</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
@@ -311,12 +330,11 @@
         <span class="ident">body_extractor_fold</span>(
             <span class="ident">req</span>,
             <span class="ident">payload</span>,
-            <span class="ident">HmacSha256::new_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>.<span class="ident">key</span>).<span class="ident">unwrap</span>(),
+            <span class="ident">SimpleHmac</span>::<span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="ident">::new_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>.<span class="ident">key</span>).<span class="ident">unwrap</span>(),
             <span class="op">|</span><span class="ident">hasher</span>, <span class="ident">_req</span>, <span class="ident">chunk</span><span class="op">|</span> <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">chunk</span>),
             <span class="op">|</span><span class="ident">body</span>, <span class="ident">hasher</span><span class="op">|</span> <span class="self">Self</span> {
                 <span class="ident">body</span>,
-                <span class="ident">hash</span>: <span class="ident">hasher</span>.<span class="ident">finalize</span>(),
-                <span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
+                <span class="ident">hash</span>: <span class="ident">hasher</span>.<span class="ident">finalize_fixed</span>(),
             },
         )
     }
@@ -331,7 +349,7 @@
         <span class="ident">App</span>, <span class="ident">Resource</span>,
     };
     <span class="kw">use</span> <span class="ident">hex_literal::hex</span>;
-    <span class="kw">use</span> <span class="ident">sha2::Sha256</span>;
+    <span class="kw">use</span> <span class="ident">sha2</span>::{<span class="ident">Sha256</span>, <span class="ident">Sha512</span>};
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::extract::Json</span>;
@@ -344,14 +362,21 @@
                     <span class="ident">Resource::new</span>(<span class="string">&quot;/key-blank&quot;</span>)
                         .<span class="ident">app_data</span>(<span class="ident">HmacConfig::new</span>(<span class="kw-2">&amp;</span>[]))
                         .<span class="ident">route</span>(<span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="ident">body</span>: <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">Sha256</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">Bytes::from</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
+                            <span class="ident">Bytes::copy_from_slice</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
                         })),
                 )
                 .<span class="ident">service</span>(
                     <span class="ident">Resource::new</span>(<span class="string">&quot;/key-pi&quot;</span>)
                         .<span class="ident">app_data</span>(<span class="ident">HmacConfig::new</span>(<span class="kw-2">&amp;</span><span class="macro">hex!</span>(<span class="string">&quot;31 41 59 26 53 58 97 93&quot;</span>)))
                         .<span class="ident">route</span>(<span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="ident">body</span>: <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">Sha256</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">Bytes::from</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
+                            <span class="ident">Bytes::copy_from_slice</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
+                        })),
+                )
+                .<span class="ident">service</span>(
+                    <span class="ident">Resource::new</span>(<span class="string">&quot;/sha512&quot;</span>)
+                        .<span class="ident">app_data</span>(<span class="ident">HmacConfig::new</span>(<span class="kw-2">&amp;</span>[]))
+                        .<span class="ident">route</span>(<span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="ident">body</span>: <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">Sha512</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+                            <span class="ident">Bytes::copy_from_slice</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
                         })),
                 ),
         )
@@ -388,17 +413,26 @@
             <span class="kw-2">&amp;</span><span class="ident">body</span>[..],
             <span class="macro">hex!</span>(<span class="string">&quot;67029104 cd676bae 23d74ac6 bdce84fc 80764b5e 5327a624 515fc5a5 2c240f8e&quot;</span>)
         );
+
+        <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">test::TestRequest::with_uri</span>(<span class="string">&quot;/sha512&quot;</span>).<span class="ident">to_request</span>();
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">test::call_and_read_body</span>(<span class="kw-2">&amp;</span><span class="ident">app</span>, <span class="ident">req</span>).<span class="kw">await</span>;
+        <span class="macro">assert_eq!</span>(
+            <span class="kw-2">&amp;</span><span class="ident">body</span>[..],
+            <span class="macro">hex!</span>(
+                <span class="string">&quot;b936cee8 6c9f87aa 5d3c6f2e 84cb5a42 39a5fe50 480a6ec6 6b70ab5b 1f4ac673
+                 0c6c5154 21b327ec 1d69402e 53dfb49a d7381eb0 67b338fd 7b0cb222 47225d47&quot;</span>
+            )
+        );
     }
 
     <span class="attribute">#[<span class="ident">actix_web::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">respects_inner_extractor_errors</span>() {
-        <span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">test::init_service</span>(
-            <span class="ident">App::new</span>().<span class="ident">app_data</span>(<span class="ident">HmacConfig::new</span>(<span class="kw-2">&amp;</span>[])).<span class="ident">route</span>(
-                <span class="string">&quot;/&quot;</span>,
-                <span class="ident">web::get</span>()
-                    .<span class="ident">to</span>(<span class="op">|</span><span class="ident">body</span>: <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="number">4</span><span class="op">&gt;</span>, <span class="ident">Sha256</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">Bytes::from</span>(<span class="ident">body</span>.<span class="ident">hash</span>()) }),
-            ),
-        )
+        <span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">test::init_service</span>(<span class="ident">App::new</span>().<span class="ident">app_data</span>(<span class="ident">HmacConfig::new</span>(<span class="kw-2">&amp;</span>[])).<span class="ident">route</span>(
+            <span class="string">&quot;/&quot;</span>,
+            <span class="ident">web::get</span>().<span class="ident">to</span>(<span class="op">|</span><span class="ident">body</span>: <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="number">4</span><span class="op">&gt;</span>, <span class="ident">Sha256</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+                <span class="ident">Bytes::copy_from_slice</span>(<span class="ident">body</span>.<span class="ident">hash</span>())
+            }),
+        ))
         .<span class="kw">await</span>;
 
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">test::TestRequest::default</span>().<span class="ident">set_json</span>(<span class="number">1234</span>).<span class="ident">to_request</span>();
