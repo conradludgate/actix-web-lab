@@ -1,2 +1,12 @@
 version: 2.1
-jobs: {}
+
+jobs:
+  noop:
+    docker: [{ image: alpine }]
+    steps: []
+
+workflows:
+  version: 2
+  skip_all:
+    jobs:
+      - noop: { filters: { branches: { ignore: 'rustdoc-gh-pages' } } }
