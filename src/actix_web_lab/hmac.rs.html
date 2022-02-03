@@ -208,6 +208,9 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
@@ -233,17 +236,20 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Example</span>
 <span class="doccomment">/// ```</span>
-<span class="doccomment">/// use actix_web::{Responder, web};</span>
-<span class="doccomment">/// use actix_web_lab::extract::BodyHash;</span>
+<span class="doccomment">/// use actix_web::{App, Responder, web};</span>
+<span class="doccomment">/// use actix_web_lab::extract::{Hmac, HmacConfig};</span>
 <span class="doccomment">/// use sha2::Sha256;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # type T = u64;</span>
-<span class="doccomment">/// async fn hash_payload(form: Hmac&lt;web::Json&lt;T&gt;, Sha256&gt;) -&gt; impl Responder {</span>
-<span class="doccomment">///     web::Bytes::copy_from_slice(form.hash())</span>
+<span class="doccomment">/// async fn hmac_payload(form: Hmac&lt;web::Json&lt;T&gt;, Sha256&gt;) -&gt; impl Responder {</span>
+<span class="doccomment">///     web::Bytes::from(form.hash())</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// let key = vec![0x01, 0x12, 0x34, 0x56];</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// App::new()</span>
-<span class="doccomment">///     .app_data(HmacConfig)</span>
+<span class="doccomment">///     .app_data(HmacConfig::new(&amp;key))</span>
+<span class="doccomment">/// # ;</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>()]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span>: <span class="ident">Digest</span><span class="op">&gt;</span> {
