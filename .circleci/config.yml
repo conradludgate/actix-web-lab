@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   noop:
     docker: [{ image: alpine }]
-    steps: []
+    steps: [checkout]
 
 workflows:
   version: 2
