@@ -351,6 +351,16 @@
 <span id="346">346</span>
 <span id="347">347</span>
 <span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::future::ready</span>;
 
@@ -393,6 +403,11 @@
 <span class="doccomment">///     .app_data(HmacConfig::static_key(key))</span>
 <span class="doccomment">/// # ;</span>
 <span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Todo</span>
+<span class="doccomment">/// - [ ] Async dynamic key extractor methods.</span>
+<span class="doccomment">/// - [ ] Concurrently acquire key and feed wrapped extractor.</span>
+<span class="doccomment">/// - [ ] Expose constant-time digest verification.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BodyHmac</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span>
 <span class="kw">where</span>
@@ -461,6 +476,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">HmacConfig</span> {
+    <span class="doccomment">/// Configure HMAC extractors to use a global, static key for all HMAC calculations.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">static_key</span>(<span class="ident">key</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">into</span>();
 
@@ -469,6 +485,10 @@
         }
     }
 
+    <span class="doccomment">/// Configure HMAC extractors to use a custom method for obtaining a secret keys.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Closure receives a reference to the HTTP request. Use when signature of request depends on</span>
+    <span class="doccomment">/// per-user secret keys.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dynamic_key</span>(<span class="ident">key_fn</span>: <span class="kw">impl</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">HttpRequest</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">key_fn</span>: <span class="ident">Box::new</span>(<span class="ident">key_fn</span>),
