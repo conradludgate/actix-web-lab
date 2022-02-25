@@ -468,7 +468,7 @@
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deref</span>, <span class="ident">DerefMut</span>, <span class="ident">Display</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">const</span> <span class="ident">LIMIT</span>: <span class="ident">usize</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">T</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">const</span> <span class="ident">LIMIT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">DEFAULT_JSON_LIMIT</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">T</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">const</span> <span class="ident">LIMIT</span>: <span class="ident">usize</span><span class="op">&gt;</span> <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">LIMIT</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Unwrap into inner `T` value.</span>

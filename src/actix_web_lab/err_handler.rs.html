@@ -502,7 +502,7 @@
             <span class="prelude-val">Ok</span>(<span class="ident">res</span>.<span class="ident">map_into_left_body</span>())
         }
 
-        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::simple_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
+        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::status_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
 
         <span class="kw">let</span> <span class="ident">mw</span> <span class="op">=</span> <span class="ident">ErrorHandlers::new</span>()
             .<span class="ident">handler</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>, <span class="ident">error_handler</span>)
@@ -527,7 +527,7 @@
             <span class="prelude-val">Ok</span>(<span class="ident">res</span>.<span class="ident">map_into_left_body</span>())
         }
 
-        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::simple_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
+        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::status_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
 
         <span class="kw">let</span> <span class="ident">mw</span> <span class="op">=</span> <span class="ident">ErrorHandlers::new</span>()
             .<span class="ident">handler</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>, <span class="ident">error_handler</span>)
@@ -555,7 +555,7 @@
             <span class="prelude-val">Ok</span>(<span class="ident">res</span>)
         }
 
-        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::simple_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
+        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::status_service</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>);
 
         <span class="kw">let</span> <span class="ident">mw</span> <span class="op">=</span> <span class="ident">ErrorHandlers::new</span>()
             .<span class="ident">handler</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>, <span class="ident">error_handler</span>)
@@ -578,7 +578,7 @@
             ))
         }
 
-        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::simple_service</span>(<span class="ident">StatusCode::BAD_REQUEST</span>);
+        <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">test::status_service</span>(<span class="ident">StatusCode::BAD_REQUEST</span>);
 
         <span class="kw">let</span> <span class="ident">mw</span> <span class="op">=</span> <span class="ident">ErrorHandlers::new</span>()
             .<span class="ident">handler</span>(<span class="ident">StatusCode::BAD_REQUEST</span>, <span class="ident">error_handler</span>)
