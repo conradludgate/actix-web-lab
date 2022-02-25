@@ -405,6 +405,8 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
 </pre><pre class="rust"><code><span class="doccomment">//! JSON extractor with const-generic payload size limit.</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -453,13 +455,15 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// /// Deserialize `Info` from request&#39;s body.</span>
 <span class="doccomment">/// #[post(&quot;/&quot;)]</span>
-<span class="doccomment">/// async fn index(info: Json&lt;Info, DEFAULT_JSON_LIMIT&gt;) -&gt; String {</span>
+<span class="doccomment">/// async fn index(info: Json&lt;Info&gt;) -&gt; String {</span>
 <span class="doccomment">///     format!(&quot;Welcome {}!&quot;, info.username)</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// const LIMIT_32_MB: usize = 33_554_432;</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// /// Deserialize payload with a higher 32MiB limit.</span>
 <span class="doccomment">/// #[post(&quot;/big-payload&quot;)]</span>
-<span class="doccomment">/// async fn big_payload(info: Json&lt;Info, 33_554_432&gt;) -&gt; String {</span>
+<span class="doccomment">/// async fn big_payload(info: Json&lt;Info, LIMIT_32_MB&gt;) -&gt; String {</span>
 <span class="doccomment">///     format!(&quot;Welcome {}!&quot;, info.username)</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
@@ -808,5 +812,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_web_lab" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (03a8cc7df 2022-02-21)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_web_lab" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4b043faba 2022-02-24)" ></div>
 </body></html>
